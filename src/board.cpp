@@ -4,7 +4,7 @@
 
 #include "../include/board.hpp"
 
-Board::Board(){
+Board::Board(): gameboard_status{{0}}{
     this->score = 0;
     this->line = 0;
     // set gameboard_status to false 

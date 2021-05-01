@@ -28,7 +28,7 @@ class Board{
         Tetris* next_tetris; 
 
         int score, line; 
-        bool gameboard_status[20][30] = {{false}};
+        bool gameboard_status[20][30];
 
         // Window and UI related
         WINDOW* game_win;
