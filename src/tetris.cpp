@@ -6,6 +6,10 @@ Tetris::Tetris(int start_y, int start_x, int shape_index, int color_pair){
     this->shape = Tetris::shape_list[shape_index];
 }
 
+Tetris::~Tetris(){
+
+}
+
 
 void Tetris::rotate(){
     // Assume square shape 
@@ -26,11 +30,15 @@ void Tetris::fall(){
     this->top_left.first ++;
 }
 
-int Tetris::getColor(){
+int Tetris::getColor() const{
     return this->color_pair;
 }
 
-const std::pair<int, int>& Tetris::getTopLeftCor(){
+const std::vector<std::vector<bool>>& Tetris::getShape() const{
+    return this->shape;
+}
+
+const std::pair<int, int>& Tetris::getTopLeftCor() const{
     return this->top_left;
 }
 

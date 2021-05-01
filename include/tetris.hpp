@@ -6,12 +6,16 @@ class Tetris{
     public:
         Tetris(int start_y, int start_x, int shape_index, int color_pair);
         ~Tetris();
+
+        static const int num_of_type = 7;
+
         // rotate the tetris close wise
         void rotate();
         // auto fall the tetris by 1 grid
         void fall();
-        int getColor();
-        const std::pair<int, int>& getTopLeftCor();
+        int getColor() const;
+        const std::vector<std::vector<bool>>& getShape() const;
+        const std::pair<int, int>& getTopLeftCor() const;
         void setTopLeftCor(std::pair<int, int> cor);
         
     private:    

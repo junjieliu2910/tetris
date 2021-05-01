@@ -2,7 +2,6 @@
 #include <ncurses.h>
 #include <vector>
 #include <string>
-#include <cstring>
 
 #include "tetris.hpp"
 
@@ -15,20 +14,21 @@ class Board{
         Board();
         ~Board();
         void init();
+        void closeWindow();
         void updateGameWindow();
         void updateScoreWindow();
         void updateNextWindow();
-        void updatelineWindow();
-         
+        void updateLineWindow();
         bool gameOver();
         
 
     private:
         // Game realted
-        Tetris current_tetris;
-        Tetris next_tetris; 
+        Tetris* current_tetris;
+        Tetris* next_tetris; 
 
         int score, line; 
+        bool gameboard_status[20][30] = {{false}};
 
         // Window and UI related
         WINDOW* game_win;
@@ -36,31 +36,31 @@ class Board{
         WINDOW* score_win;
         WINDOW* line_win;
         
-        int gap_between_win = 2;
+        const int gap_between_win = 2;
         // settings for game window
-        int gw_height=20, gw_width=30;
-        int gw_start_y=5, gw_start_x=5;
+        const int gw_height=20, gw_width=30;
+        const int gw_start_y=5, gw_start_x=5;
 
         // Setting for next window
-        int nw_height=6, nw_width=12;
-        int nw_start_y=gw_start_y;
-        int nw_start_x=gw_start_x + gw_width + gap_between_win;
+        const int nw_height=6, nw_width=12;
+        const int nw_start_y=gw_start_y;
+        const int nw_start_x=gw_start_x + gw_width + gap_between_win;
 
         // settings for score window 
-        int sw_height=6, sw_width=12;
-        int sw_start_y=nw_start_y + nw_height + gap_between_win;
-        int sw_start_x = nw_start_x; 
+        const int sw_height=6, sw_width=12;
+        const int sw_start_y = nw_start_y + nw_height;
+        const int sw_start_x = nw_start_x; 
 
         // setting for line window
-        int lw_height = 6, lw_width = 12;
-        int lw_start_y = sw_start_y + sw_height + gap_between_win; 
-        int lw_start_x = nw_start_x;
+        const int lw_height = 6, lw_width = 12;
+        const int lw_start_y = sw_start_y + sw_height;
+        const int lw_start_x = nw_start_x;
 
         WINDOW* createNewwinWithBox(int height, int width, int start_y, int start_x);
-        void destory_win(WINDOW* win);
+        void destoryWin(WINDOW* win);
         void printInMiddle(WINDOW* win, int height, int width, std::string msg);
-        void drawTetris(WINDOW* win, const Tetris& block, int start_y, int start_x);
-        void deleteTetris(WINDOW* win, const Tetris& block, int start_y, int start_x);
+        void drawTetris(WINDOW* win, const Tetris* block);
+        void deleteTetris(WINDOW* win, const Tetris* block);
 
 
 };
