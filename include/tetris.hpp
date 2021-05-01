@@ -7,11 +7,12 @@ class Tetris{
         Tetris(int start_y, int start_x, int shape_index, int color_pair);
         ~Tetris();
         // rotate the tetris close wise
-        void rorate();
+        void rotate();
         // auto fall the tetris by 1 grid
         void fall();
         int getColor();
-        std::pair<int, int> getTopLeftCor();
+        const std::pair<int, int>& getTopLeftCor();
+        void setTopLeftCor(std::pair<int, int> cor);
         
     private:    
         static inline const std::vector<std::vector<std::vector<bool>>> shape_list{
