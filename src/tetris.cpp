@@ -1,47 +1,70 @@
 #include "../include/tetris.hpp" 
 
 Tetris::Tetris(int start_y, int start_x, int shape_index, int color_pair){
-    this->top_left = std::make_pair(start_y, start_x);
+    top_left = std::make_pair(start_y, start_x);
     this->color_pair = color_pair;
-    this->shape = Tetris::shape_list[shape_index];
+    shape = Tetris::shape_list[shape_index];
 }
 
 Tetris::~Tetris(){
 
 }
 
-
-void Tetris::rotate(){
+void Tetris::rotateClockWise(){
     // Assume square shape 
-    int row_num = this->shape.size();
+    int row_num = shape.size(); 
     for(int i = 0; i < row_num / 2; ++i){
         for(int j = i; j < row_num - i - 1; ++j){
-            bool temp = this->shape[i][j];
-            this->shape[i][j] = this->shape[j][row_num-i-1];
-            this->shape[j][row_num-i-1] = this->shape[row_num-i-1][row_num-j-1];
-            this->shape[row_num-i-1][row_num-j-1] = this->shape[row_num-j-1][i];
-            this->shape[row_num-j-1][i] = temp; 
+            bool temp = shape[i][j];
+            shape[i][j] = shape[row_num-j-1][i];
+            shape[row_num-j-1][i] = shape[row_num-i-1][row_num-j-1];
+            shape[row_num-i-1][row_num-j-1] = shape[j][row_num-i-1];
+            shape[j][row_num-i-1] = temp;
+        }
+    }
+}
+
+void Tetris::rotateAntiClockWise(){
+    // Assume square shape 
+    int row_num = shape.size();
+    for(int i = 0; i < row_num / 2; ++i){
+        for(int j = i; j < row_num - i - 1; ++j){
+            bool temp = shape[i][j];
+            shape[i][j] = shape[j][row_num-i-1];
+            shape[j][row_num-i-1] = shape[row_num-i-1][row_num-j-1];
+            shape[row_num-i-1][row_num-j-1] = shape[row_num-j-1][i];
+            shape[row_num-j-1][i] = temp; 
         }
     }
 }
 
 void Tetris::fall(){
     // Fall the tetris by 1 grid 
-    this->top_left.first ++;
+    top_left.first ++;
+}
+
+void Tetris::moveLeft(){
+    // NOTE, 2 ACS_BLOCK for 1 rect shape
+    top_left.second -= 2;
+}
+
+void Tetris::moveRight(){
+    top_left.second += 2;
 }
 
 int Tetris::getColor() const{
-    return this->color_pair;
+    return color_pair;
 }
 
 const std::vector<std::vector<bool>>& Tetris::getShape() const{
-    return this->shape;
+    return shape;
 }
 
 const std::pair<int, int>& Tetris::getTopLeftCor() const{
-    return this->top_left;
+    return top_left;
 }
 
-void Tetris::setTopLeftCor(std::pair<int, int> cor){
-     
+void Tetris::setTopLeftCor(int y, int x){
+    top_left.first = y;
+    top_left.second = x;
 }

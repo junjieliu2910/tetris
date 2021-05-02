@@ -1,7 +1,11 @@
 #include <iostream> 
+#include <unistd.h>
 
 #include "../include/tetris.hpp"
 #include "../include/board.hpp"
+
+
+void gameLoop();
 
 int main(int argc, char* argv[]){
     initscr();
@@ -24,13 +28,25 @@ int main(int argc, char* argv[]){
     init_pair(6, 6, 0);
     init_pair(7, 7, 0);
 
-
+    int frame_rate = 50;
+    int delay = 1000000 / frame_rate;
     Board game_board = Board();
     game_board.init();
-    game_board.updateNextWindow();
+    game_board.updateGameWindow();
 
-    getch();
+    while(1){
+        game_board.handleUserInput();
+        game_board.updateLineWindow();
+        game_board.updateScoreWindow();
+        game_board.updateNextWindow();
+        usleep(delay);
+    }
+
     game_board.closeWindow();
     endwin();
     return 0;
+}
+
+void gameLoop(){
+
 }

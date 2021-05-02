@@ -9,14 +9,18 @@ class Tetris{
 
         static const int num_of_type = 7;
 
-        // rotate the tetris close wise
-        void rotate();
-        // auto fall the tetris by 1 grid
+        // rotate the tetris 
+        void rotateClockWise();
+        void rotateAntiClockWise();
+        // Position related function
         void fall();
+        void moveLeft();
+        void moveRight();
+
         int getColor() const;
         const std::vector<std::vector<bool>>& getShape() const;
         const std::pair<int, int>& getTopLeftCor() const;
-        void setTopLeftCor(std::pair<int, int> cor);
+        void setTopLeftCor(int y, int x);
         
     private:    
         static inline const std::vector<std::vector<std::vector<bool>>> shape_list{
