@@ -20,7 +20,6 @@ class Board{
         void updateScoreWindow();
         void updateNextWindow();
         void updateLineWindow();
-        bool tetrisCanMove();
         void gameStart();
         bool gameOver();
         
@@ -32,6 +31,9 @@ class Board{
 
         int score, line; 
         int frame_rate;
+
+        // Check whether current tetris is freezed and cannot mvoe 
+        bool tetris_freeze;
 
         // Window and UI related
         WINDOW* game_win;
@@ -70,7 +72,7 @@ class Board{
         void printInMiddle(WINDOW* win, int height, int width, std::string msg);
         void drawTetris(WINDOW* win, const Tetris* block);
         void deleteTetris(WINDOW* win, const Tetris* block);
+        bool tetrisCanMove();
         void getFullLineIndex();
         void dropCurrentTetris();
-
 };

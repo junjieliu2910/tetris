@@ -7,6 +7,7 @@
 Board::Board(int frame_rate){
     score = 0;
     line = 0;
+    freeze = false;
     this->frame_rate=frame_rate;
     std::fill_n(&gameboard_status[0][0], sizeof(gameboard_status)/sizeof(**gameboard_status
                 ), -1);
@@ -72,16 +73,9 @@ void Board::handleUserInput(){
             } 
             drawTetris(game_win, current_tetris);
             break;
-        case KEY_DOWN:{
-            deleteTetris(game_win, current_tetris);
-            auto current_cor = current_tetris->getTopLeftCor();
-            current_tetris->fall();
-            if(!tetrisCanMove()){
-                current_tetris->setTopLeftCor(current_cor.first, current_cor.second);
-            }
-            drawTetris(game_win, current_tetris);
+        case KEY_DOWN:
+            dropCurrentTetris();
             break;
-        }
         case KEY_UP:{
             deleteTetris(game_win, current_tetris);
             auto current_cor = current_tetris->getTopLeftCor();
@@ -122,40 +116,6 @@ void Board::updateLineWindow(){
     box(line_win, 0, 0);
     printInMiddle(line_win, lw_height/2, lw_width, std::to_string(line));
     wrefresh(line_win);
-}
-
-bool Board::tetrisCanMove(){
-    // check whether the current tetris can move around 
-    // No collision with the border
-    // This implementation is somehow ugly
-    // Refactor late
-    int row_num = current_tetris->getShape().size();
-    auto top_left = current_tetris->getTopLeftCor();
-    auto shape = current_tetris->getShape();
-    auto checker = [](int x, int y)->bool {
-        return x >= 0 && x <= gw_height-2 && y >= 0 && y <= gw_width-2;
-    };
-    for(int i = 0; i < row_num; ++i){
-        for(int j = 0; j < row_num; ++j){
-            if(shape[i][j]){
-                // Check top and bottom border
-                if(top_left.first+i<=0 || top_left.first+i+1 >= gw_height){
-                    return false;
-                }
-                // Check left and right border
-                if(top_left.second+2*j <= 0 || top_left.second+2*j+2 >= gw_width){
-                    return false;
-                }
-                // Check bottom conflict with existing tetris 
-                if(checker(top_left.first+i-1, top_left.second+2*j-1)){
-                    if(gameboard_status[top_left.first+i-1][top_left.second+2*j-1] != -1){
-                        return false;
-                    }
-                }
-            }
-        }
-    }
-    return true;
 }
 
 void Board::gameStart(){
@@ -218,6 +178,40 @@ void Board::deleteTetris(WINDOW* win, const Tetris* block){
     }
 }
 
+bool Board::tetrisCanMove(){
+    // check whether the current tetris can move around 
+    // No collision with the border
+    // This implementation is somehow ugly
+    // Refactor late
+    int row_num = current_tetris->getShape().size();
+    auto top_left = current_tetris->getTopLeftCor();
+    auto shape = current_tetris->getShape();
+    auto checker = [](int x, int y)->bool {
+        return x >= 0 && x <= gw_height-2 && y >= 0 && y <= gw_width-2;
+    };
+    for(int i = 0; i < row_num; ++i){
+        for(int j = 0; j < row_num; ++j){
+            if(shape[i][j]){
+                // Check top and bottom border
+                if(top_left.first+i<=0 || top_left.first+i+1 >= gw_height){
+                    return false;
+                }
+                // Check left and right border
+                if(top_left.second+2*j <= 0 || top_left.second+2*j+2 >= gw_width){
+                    return false;
+                }
+                // Check bottom conflict with existing tetris 
+                if(checker(top_left.first+i-1, top_left.second+2*j-1)){
+                    if(gameboard_status[top_left.first+i-1][top_left.second+2*j-1] != -1){
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
 void Board::getFullLineIndex(){
     for(int i = 0; i < gw_height-2; ++i){
         bool full = true;
@@ -233,7 +227,23 @@ void Board::getFullLineIndex(){
 }
 
 void Board::dropCurrentTetris(){
-    for(int i = 0; i < gw_width-2; ++i){
-         
+    deleteTetris(game_win, current_tetris);
+    while(tetrisCanMove()){
+        current_tetris->fall();
+    }         
+    // Reverse one fall step 
+    auto top_left = current_tetris->getTopLeftCor();
+    current_tetris->setTopLeftCor(top_left.first-1, top_left.second);
+    drawTetris(game_win, current_tetris);
+    tetris_freeze = true;
+    auto shape = current_tetris->getShape();
+    top_left.first -= 1;
+    int row_num = shape.size();
+    //Update gameboard status
+    for(int i = 0; i < row_num; ++i){
+        for(int j = 0; j < row_num; ++j){
+            gameboard_status[top_left.first-1][top_left.second+2*j-1] = current_tetris->getColor();
+            gameboard_status[top_left.first-1][top_left.second+2*j] = current_tetris->getColor();
+        }
     }
 }
