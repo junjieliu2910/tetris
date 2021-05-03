@@ -4,10 +4,12 @@
 
 #include "../include/board.hpp"
 
-Board::Board(int frame_rate): gameboard_status{{-1}}{
+Board::Board(int frame_rate){
     score = 0;
     line = 0;
     this->frame_rate=frame_rate;
+    std::fill_n(&gameboard_status[0][0], sizeof(gameboard_status)/sizeof(**gameboard_status
+                ), -1);
     // set gameboard_status to false 
     game_win = createNewwinWithBox(gw_height, gw_width, gw_start_y, gw_start_x);
     next_win = createNewwinWithBox(nw_height, nw_width, nw_start_y, nw_start_x);
