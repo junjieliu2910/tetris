@@ -11,7 +11,7 @@ class Board{
      * line window. 
      */
     public:
-        Board();
+        Board(int frame_rate=30);
         ~Board();
         void init();
         void closeWindow();
@@ -21,6 +21,7 @@ class Board{
         void updateNextWindow();
         void updateLineWindow();
         bool tetrisCanMove();
+        void gameStart();
         bool gameOver();
         
 
@@ -30,6 +31,7 @@ class Board{
         Tetris* next_tetris; 
 
         int score, line; 
+        int frame_rate;
 
         // Window and UI related
         WINDOW* game_win;
@@ -58,7 +60,9 @@ class Board{
         const static int lw_start_x = nw_start_x;
 
         // Store the information about game baord
-        int gameboard_status[gw_height][gw_width];
+        // Two offset since the border take those positions
+        int gameboard_status[gw_height-2][gw_width-2];
+        std::vector<int> full_line_index;
 
 
         WINDOW* createNewwinWithBox(int height, int width, int start_y, int start_x);
@@ -66,6 +70,7 @@ class Board{
         void printInMiddle(WINDOW* win, int height, int width, std::string msg);
         void drawTetris(WINDOW* win, const Tetris* block);
         void deleteTetris(WINDOW* win, const Tetris* block);
-
+        void getFullLineIndex();
+        void dropCurrentTetris();
 
 };

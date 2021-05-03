@@ -4,9 +4,10 @@
 
 #include "../include/board.hpp"
 
-Board::Board(): gameboard_status{{-1}}{
+Board::Board(int frame_rate): gameboard_status{{-1}}{
     score = 0;
     line = 0;
+    this->frame_rate=frame_rate;
     // set gameboard_status to false 
     game_win = createNewwinWithBox(gw_height, gw_width, gw_start_y, gw_start_x);
     next_win = createNewwinWithBox(nw_height, nw_width, nw_start_y, nw_start_x);
@@ -124,22 +125,39 @@ void Board::updateLineWindow(){
 bool Board::tetrisCanMove(){
     // check whether the current tetris can move around 
     // No collision with the border
+    // This implementation is somehow ugly
+    // Refactor late
     int row_num = current_tetris->getShape().size();
     auto top_left = current_tetris->getTopLeftCor();
     auto shape = current_tetris->getShape();
-    for(int i = 0; i < row_num / 2; ++i){
-        for(int j = 0; j < row_num - i - 1; ++j){
+    auto checker = [](int x, int y)->bool {
+        return x >= 0 && x <= gw_height-2 && y >= 0 && y <= gw_width-2;
+    };
+    for(int i = 0; i < row_num; ++i){
+        for(int j = 0; j < row_num; ++j){
             if(shape[i][j]){
+                // Check top and bottom border
                 if(top_left.first+i<=0 || top_left.first+i+1 >= gw_height){
                     return false;
                 }
-                if(top_left.second+2*j+1 <= 0 || top_left.second+2*j+2 >= gw_width){
+                // Check left and right border
+                if(top_left.second+2*j <= 0 || top_left.second+2*j+2 >= gw_width){
                     return false;
+                }
+                // Check bottom conflict with existing tetris 
+                if(checker(top_left.first+i-1, top_left.second+2*j-1)){
+                    if(gameboard_status[top_left.first+i-1][top_left.second+2*j-1] != -1){
+                        return false;
+                    }
                 }
             }
         }
     }
     return true;
+}
+
+void Board::gameStart(){
+
 }
 
 bool Board::gameOver(){
@@ -195,5 +213,25 @@ void Board::deleteTetris(WINDOW* win, const Tetris* block){
                 mvwaddch(win, top_left_cor.first+i, top_left_cor.second+2*j+1, ' ');
             }
         }
+    }
+}
+
+void Board::getFullLineIndex(){
+    for(int i = 0; i < gw_height-2; ++i){
+        bool full = true;
+        for(int j = 0; j < gw_width-2; ++j){
+            if(gameboard_status[i][j] == -1){
+                full = false;
+            } 
+        }
+        if(full){
+            full_line_index.push_back(i);
+        }
+    }
+}
+
+void Board::dropCurrentTetris(){
+    for(int i = 0; i < gw_width-2; ++i){
+         
     }
 }
