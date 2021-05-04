@@ -29,8 +29,10 @@ class Board{
         Tetris* current_tetris;
         Tetris* next_tetris; 
 
+        const static int basic_score = 100;
         int score, line; 
         int frame_rate;
+        int frame_delay;
 
         // Check whether current tetris is freezed and cannot mvoe 
         bool tetris_freeze;
@@ -74,5 +76,8 @@ class Board{
         void deleteTetris(WINDOW* win, const Tetris* block);
         bool tetrisCanMove();
         void getFullLineIndex();
+        void removeFullLineWithAnimation();
+        void redrawGameBoard();
         void dropCurrentTetris();
+        void freezeTetris();
 };
