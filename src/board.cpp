@@ -12,8 +12,8 @@ Board::Board(int frame_rate){
     tetris_freeze = false;
     this->frame_rate=frame_rate;
     frame_delay = 1000000/frame_rate;
-    for(int i = 0; i < gw_height; ++i){
-        for(int j = 0; j < gw_width; ++j){
+    for(int i = 0; i < gw_height-2; ++i){
+        for(int j = 0; j < gw_width-2; ++j){
             gameboard_status[i][j] = -1;
         }
     }
@@ -295,7 +295,7 @@ void Board::removeFullLineWithAnimation(){
     
     for(auto& i : full_line_index){
         for(int j = i; j > 0; --j){
-            for(int k = 0; k < gw_width; ++k){
+            for(int k = 0; k < gw_width-2; ++k){
                 gameboard_status[j][k] = gameboard_status[j-1][k]; 
             }
         }
@@ -303,7 +303,7 @@ void Board::removeFullLineWithAnimation(){
 
     int size = full_line_index.size();
     for(int i = 0; i < size; ++i){
-        for(int j = 0; j < gw_width; ++j){
+        for(int j = 0; j < gw_width-2; ++j){
             gameboard_status[i][j] = -1;
         }
     }

@@ -68,7 +68,6 @@ class Board{
         int gameboard_status[gw_height-2][gw_width-2];
         std::vector<int> full_line_index;
 
-
         WINDOW* createNewwinWithBox(int height, int width, int start_y, int start_x);
         void destoryWin(WINDOW* win);
         void printInMiddle(WINDOW* win, int height, int width, std::string msg);
