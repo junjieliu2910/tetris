@@ -10,7 +10,9 @@ cmake ..
 make
 ./tetris
 ```
-Use left and right arrow keys to shift \\
-Use space key to rotate \\
-Use down key to let the tetris down immediately \\
+Use left and right arrow keys to shift 
+
+Use space key to rotate 
+
+Use down key to let the tetris down immediately 
 
